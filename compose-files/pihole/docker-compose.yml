@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  web-app:
+    image: pihole/pihole:latest
+    ports:
+      - "${SERVER_IP}:53:53/tcp"
+      - "${SERVER_IP}:53:53/udp"
+      - "8079:80/tcp"
+    environment:
+      TZ: 'America/Chicago'
+      WEBPASSWORD: "${ADMIN_PASS}"
+      PIHOLE_DNS_: "9.9.9.9;1.1.1.1"
+      DNSMASQ_LISTENING: "all" #if using swarm this env variable will allow DNS to work over overlay and bridge networks.
+    volumes:
+      - '/mnt/media/container-program-files/pihole:/etc/pihole'
+      - '/mnt/media/container-program-files/dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped

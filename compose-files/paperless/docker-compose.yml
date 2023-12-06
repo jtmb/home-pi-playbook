@@ -1,0 +1,56 @@
+version: '3.1'
+services:
+  broker:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    volumes:
+      - '/mnt/media/container-program-files/paperless/redis_data:/data'
+
+  paperless-ngx:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - broker
+      - gotenberg
+      - tika
+    ports:
+      - "8097:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "-S", "--max-time", "2", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - '/mnt/media/container-program-files/paperless/data:/usr/src/paperless/data'
+      - '/mnt/media/container-program-files/paperless/config:/config'
+      - '/mnt/media/container-program-files/paperless/media:/usr/src/paperless/media'
+      - '/mnt/media/container-program-files/paperless/export:/usr/src/paperless/export'
+      - '/mnt/media/container-program-files/paperless/consume:/usr/src/paperless/consume'
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      USERMAP_UID: 1000
+      USERMAP_GID: 1000
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: 8108453500!
+      PAPERLESS_CONSUMER_POLLING: 10
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_OCR_OUTPUT_TYPE: pdf
+      PAPERLESS_OCR_CLEAN: clean
+
+  gotenberg:
+    image: docker.io/gotenberg/gotenberg:7.8
+    restart: unless-stopped
+
+    # The gotenberg chromium route is used to convert .eml files. We do not
+    # want to allow external content like tracking pixels or even javascript.
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+  tika:
+    image: ghcr.io/paperless-ngx/tika:latest
+    restart: unless-stopped
+
+

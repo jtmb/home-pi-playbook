@@ -1,0 +1,16 @@
+---
+version: '3'
+services:
+  nextapp:
+    image: nextcloud
+    restart: always
+    ports:
+      - 8098:80
+    volumes:
+      - /mnt/media/container-program-files/next_cloud/data:/var/www/html
+    environment:
+      PHP_UPLOAD_LIMIT: 16384
+      NEXTCLOUD_TRUSTED_DOMAINS: 10.0.0.49
+      NEXTCLOUD_ADMIN_USER: brajam
+      NEXTCLOUD_ADMIN_PASSWORD: "${ADMIN_PASS}"
+      NEXTCLOUD_UPDATE: 1

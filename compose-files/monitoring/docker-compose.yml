@@ -1,0 +1,59 @@
+services:
+
+  # prometheus:
+  #   image: prom/prometheus
+  #   user: "0"
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   ports:
+  #     - 9090:9090
+  #   restart: unless-stopped
+  #   volumes:
+  #     - '/mnt/media/container-program-files/prometheus:/etc/prometheus'
+  #     - '/mnt/media/container-program-files/prometheus/prom_data:/prometheus'
+
+  # loki:
+  #   user: "0"
+  #   image: grafana/loki:latest
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3100:3100"
+  #   command: -config.file=/etc/loki/loki-config.yml
+  #   volumes:
+  #     - '/mnt/media/container-program-files/loki/config:/etc/loki'
+  #     - '/mnt/media/container-program-files/loki/data:/data/loki'  
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    ports:
+      - 3001:3001
+    restart: unless-stopped
+    volumes:
+      - '/mnt/media/container-program-files/uptime-kuma:/app/data'
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # node-exporter:
+  #   image: flaviostutz/docker-swarm-node-exporter
+  #   environment:
+  #     - NODE_ID={{.Node.ID}}
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #     - /etc/hostname:/etc/nodename
+  #   ports:
+  #    - 9100:9100         
+
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - 3000:3000
+  #   restart: unless-stopped
+  #   environment:
+  #     GF_SECURITY_ADMIN_USER: admin
+  #     GF_SECURITY_ADMIN_PASSWORD: ${ADMIN_PASS}
+  #     GF_INSTALL_PLUGINS: grafana-piechart-panel
+  #   user: "0"
+  #   volumes:
+  #     - '/mnt/media/container-program-files/grafana/datasources:/etc/grafana/provisioning/datasources'
+  #     - '/mnt/media/container-program-files/grafana/data:/var/lib/grafana'

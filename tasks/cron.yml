@@ -1,0 +1,7 @@
+- name: Creates Backup Cron Job
+  tags: ipcheck
+  ansible.builtin.cron:
+    name: "Backups"
+    user: root
+    special_time: daily
+    job: "/mnt/media/startup-scripts/backups.sh"

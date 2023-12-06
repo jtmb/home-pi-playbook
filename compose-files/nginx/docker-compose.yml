@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    environment:
+      DISABLE_IPV6: 'true'
+    volumes:
+      - /mnt/media/container-program-files/NGINX_PROXY_MANAGER/data:/data
+      - /mnt/media/container-program-files/NGINX_PROXY_MANAGER/letsencrypt:/etc/letsencrypt

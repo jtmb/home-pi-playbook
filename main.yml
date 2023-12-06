@@ -1,0 +1,77 @@
+---
+# Post-provisioning VM
+- name: "Provision Enviorment"
+  hosts: all
+  become: true
+  vars_files:
+    - vars/vars.yml
+  tasks:
+
+  # - name: Collect Server IP
+  #   debug:
+  #     msg: "{{ ansible_ssh_host }}"
+
+  - name: Install Required Packages
+    when: deploy_packages == true
+    include: tasks/packages.yml
+
+  - name: Install Docker from official signed repo
+    when: deploy_packages == true
+    include: tasks/docker.yml
+
+  - name: Setup cron Job
+    when: deploy_packages == true
+    include: tasks/cron.yml
+    
+#  Provision Docker Containers om server1
+
+- name: "Provision Containers"
+  hosts: server1
+  become_user: root
+  become: true
+  tags: containers
+  vars_files:
+    - vars/vars.yml
+  tasks:
+
+  # - name: Collect Server IP
+  #   debug:
+  #     msg: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+  - name: Mount Drives
+    when: deploy_containers == true
+    include: tasks/drive_mounts.yml
+
+  - name: Install Containers
+    when: deploy_containers == true
+    include: tasks/containers_1.yml 
+  
+  - name: Install Webservers
+    when: deploy_containers == true
+    include: tasks/webservers.yml
+
+  - name: Setup DNS
+    when: deploy_containers == true
+    include: tasks/dns.yml
+    
+# Lock Down SSH and reboot
+  # !! preferablly this is the last task, after this task SSH ports will change to 2002 and key auth forced
+- name: "Lock Down SSH"
+  hosts: all
+  become: true
+  vars_files:
+    - vars/vars.yml
+  tasks:
+  - name: Setup SSH security
+    when: deploy_ssh_security == true
+    include: tasks/ssh_security.yml
+
+- name: "Update and Reboot"
+  hosts: all
+  become: true
+  vars_files:
+    - vars/vars.yml
+  tasks:
+  - name: Update and Reboot
+    when: update_reboot == true
+    include: tasks/update_reboot.yml

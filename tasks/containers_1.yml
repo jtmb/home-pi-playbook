@@ -1,0 +1,22 @@
+
+- name: Copy a compose" files from repo to the remote machine to authenticate git repos on host machine
+  copy:
+    src: "/home/{{user_id}}/Documents/repos/branco-ansible-onprem/compose-files"
+    dest: "/tmp"
+
+- name: DEPLOY COMPOSE CONTAINERS STACK 
+  vars:
+    env_file: env ADMIN_PASS={{ssh_pass}} SERVER_IP={{server_ip}}
+  shell: "{{ item }}"
+  with_items: 
+    - "{{env_file}} docker compose -f /tmp/compose-files/glances/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/monitoring/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/nextcloud/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/nginx-proxy-manager/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/paperless/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/pihole/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/portainer/docker-compose.yml up -d"
+
+  loop_control:
+    label: "{{ item | regex_replace('^.*docker compose', 'docker compose') }}" #replaces env secrets from being shown in console output
+    

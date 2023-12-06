@@ -1,0 +1,21 @@
+- name: "Check if External Drive is mounted"
+  become: true
+  shell: "findmnt -nr -o target -S /dev/sda1"
+  register: devsda1_output
+  ignore_errors: true
+
+- name: "Check if External Drive is mounted"
+  become: true
+  shell: "findmnt -nr -o target -S /dev/sdb1"
+  register: devsdb1_output
+  ignore_errors: true
+
+- name: "Mount Media Drive"
+  become: true
+  when: devsda1_output.stdout != "/mnt/media"
+  shell: "mount /dev/sda1 /mnt/media"
+
+- name: "Remount Backup Drive"
+  become: true
+  when: devsdb1_output.stdout != "/mnt/backups"
+  shell: "mount /dev/sdb1 /mnt/backups"

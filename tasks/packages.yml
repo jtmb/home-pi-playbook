@@ -1,0 +1,23 @@
+# Packaging
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes 
+
+- name: Update repositories cache and install packages
+  apt:
+    name: 
+    - net-tools
+    - lshw
+    - openssh-server
+    - fail2ban
+    - ufw
+    - git
+    - httpie
+    - letsencrypt
+    update_cache: yes
+
+

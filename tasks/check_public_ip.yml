@@ -1,0 +1,27 @@
+# Make cloudflare DNS API request and register vars
+  - name: Check for active Record and register cloudflare_dns_record VAR
+    uri:
+      url: "https://api.cloudflare.com/client/v4/zones/{{ cf_zone_id }}/dns_records?type=A&name={{a_name_record}}"
+      method: GET
+      body_format: json    
+      headers:
+        Authorization: "bearer {{ cf_key_read }}"
+        Content-Type: "application/json"
+    register: cloudflare_dns_record
+
+  - name: Register IP from active cloudflare_dns_record and cut value, register VAR
+    debug:
+      msg: "{{ cloudflare_dns_record | json_query('*.result[].content') | replace('[', '') | replace(']', '') |replace(\"'\",'') }}"
+    register: cloudflare_server_ip
+    # no_log: true
+
+  - name: Current Public IP
+    debug:
+      msg: "{{cloudflare_server_ip.msg}}"
+
+  - name: Remove current IP file
+    ansible.builtin.file:
+      path: /tmp/ip.out
+      state: absent
+  - name: Save IP to temp file
+    shell: echo {{cloudflare_server_ip.msg}} >> /tmp/ip.out
