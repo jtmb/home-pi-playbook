@@ -4,4 +4,4 @@
     name: "Backups"
     user: root
     special_time: daily
-    job: "/mnt/media/startup-scripts/backups.sh"
+    job: "/mnt/media/startup-scripts/backup.sh"
