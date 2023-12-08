@@ -10,10 +10,15 @@
     line: '{{ item }}'
   with_items:
     - '10.0.0.49 paperless.branconet.lan'
-    - '10.0.0.49 pi.branconet.lan'
+    - '10.0.0.49 portainer.branconet.lan'
     - '10.0.0.49 lucinda.branconet.lan' 
     - '10.0.0.49 santos.branconet.lan' 
     - '10.0.0.49 aplb.branconet.lan'
+    - '10.0.0.49 homeassistant.branconet.lan'
+    - '10.0.0.49 glances.branconet.lan'
+    - '10.0.0.49 nextcloud.branconet.lan'
+    - '10.0.0.49 pihole.branconet.lan'
+    - '10.0.0.49 homepage.branconet.lan'
 - name: Restart DNS service
   tags: dns
   shell: docker restart pihole-web-app-1

@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  web-app:
+    image: "homeassistant/home-assistant"
+    volumes:
+      - '/mnt/media/container-program-files/home-assistant/config:/config'
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    ports:
+     - 8124:8123

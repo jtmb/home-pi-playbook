@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  web-app:
+    image: ghcr.io/gethomepage/homepage:latest
+    environment:
+      PUID: 1000
+      PGID: 1000
+    ports:
+      - 3002:3000
+    volumes:
+      - /mnt/media/container-program-files/homepage/config:/app/config # Make sure your local config directory exists
+      - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
+    restart: unless-stopped

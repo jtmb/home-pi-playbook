@@ -12,10 +12,12 @@
     - "{{env_file}} docker compose -f /tmp/compose-files/glances/docker-compose.yml up -d"
     - "{{env_file}} docker compose -f /tmp/compose-files/monitoring/docker-compose.yml up -d"
     - "{{env_file}} docker compose -f /tmp/compose-files/nextcloud/docker-compose.yml up -d"
-    - "{{env_file}} docker compose -f /tmp/compose-files/nginx-proxy-manager/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/nginx/docker-compose.yml up -d"
     - "{{env_file}} docker compose -f /tmp/compose-files/paperless/docker-compose.yml up -d"
     - "{{env_file}} docker compose -f /tmp/compose-files/pihole/docker-compose.yml up -d"
     - "{{env_file}} docker compose -f /tmp/compose-files/portainer/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/homepage/docker-compose.yml up -d"
+    - "{{env_file}} docker compose -f /tmp/compose-files/home-assistant/docker-compose.yml up -d"
 
   loop_control:
     label: "{{ item | regex_replace('^.*docker compose', 'docker compose') }}" #replaces env secrets from being shown in console output
