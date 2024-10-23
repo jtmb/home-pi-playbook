@@ -1,6 +1,6 @@
 ---
 # Post-provisioning VM
-- name: "Provision Enviorment"
+- name: "Provision Environment"
   hosts: all
   become: true
   vars_files:
@@ -13,18 +13,17 @@
 
   - name: Install Required Packages
     when: deploy_packages == true
-    include: tasks/packages.yml
+    include_tasks: tasks/packages.yml
 
   - name: Install Docker from official signed repo
     when: deploy_packages == true
-    include: tasks/docker.yml
+    include_tasks: tasks/docker.yml
 
   - name: Setup cron Job
     when: deploy_packages == true
-    include: tasks/cron.yml
-    
-#  Provision Docker Containers om server1
+    include_tasks: tasks/cron.yml
 
+# Provision Docker Containers on server1
 - name: "Provision Containers"
   hosts: server1
   become_user: root
@@ -40,22 +39,22 @@
 
   - name: Mount Drives
     when: deploy_containers == true
-    include: tasks/drive_mounts.yml
+    include_tasks: tasks/drive_mounts.yml
 
   - name: Install Containers
     when: deploy_containers == true
-    include: tasks/containers_1.yml 
-  
+    include_tasks: tasks/containers_1.yml
+
   - name: Install Webservers
     when: deploy_containers == true
-    include: tasks/webservers.yml
+    include_tasks: tasks/webservers.yml
 
   - name: Setup DNS
     when: deploy_containers == true
-    include: tasks/dns.yml
-    
+    include_tasks: tasks/dns.yml
+
 # Lock Down SSH and reboot
-  # !! preferablly this is the last task, after this task SSH ports will change to 2002 and key auth forced
+# !! preferably this is the last task, after this task SSH ports will change to 2002 and key auth forced
 - name: "Lock Down SSH"
   hosts: all
   become: true
@@ -64,7 +63,7 @@
   tasks:
   - name: Setup SSH security
     when: deploy_ssh_security == true
-    include: tasks/ssh_security.yml
+    include_tasks: tasks/ssh_security.yml
 
 - name: "Update and Reboot"
   hosts: all
@@ -74,4 +73,4 @@
   tasks:
   - name: Update and Reboot
     when: update_reboot == true
-    include: tasks/update_reboot.yml
+    include_tasks: tasks/update_reboot.yml

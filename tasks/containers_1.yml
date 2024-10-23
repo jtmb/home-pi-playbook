@@ -1,7 +1,7 @@
 
 - name: Copy a compose" files from repo to the remote machine to authenticate git repos on host machine
   copy:
-    src: "/home/{{user_id}}/Documents/repos/branco-ansible-onprem/compose-files"
+    src: "/home/{{user_id}}/home-pi-playbook/compose-files"
     dest: "/tmp"
 
 - name: DEPLOY COMPOSE CONTAINERS STACK 
